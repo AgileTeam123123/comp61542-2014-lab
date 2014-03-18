@@ -27,9 +27,14 @@ def mode(X):
         else:
             d[item] = 1
 
-    m = (0, 0)
+    max = 0
     for key in d.keys():
-        if d[key] > m[1]:
-            m = (key, d[key])
+        if d[key] > max:
+            max = d[key]
+            
+    modes = []
+    for key in d.keys():
+        if d[key] == max:
+            modes.append(key)
 
-    return [m[0]]
+    return modes
