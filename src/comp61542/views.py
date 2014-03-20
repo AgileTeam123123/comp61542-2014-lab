@@ -12,6 +12,31 @@ def format_data(data):
             result.append((fmt % item).rstrip('0').rstrip('.'))
     return result
 
+@app.route("/search")
+def showSearch():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset":dataset, "id":"search"}
+    args['title'] = "Search"
+    return render_template("search.html", args=args)
+
+@app.route("/search/authors")
+def authorSearch():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset":dataset, "id":"search results"}
+    args['title'] = "Search Results"
+    
+    name = "bob"
+    
+    if "name" in request.args:
+        name = request.args.get("name")
+    
+    args["data"] = db.search_authors_by_name(name)
+        
+    return render_template("statistics_details.html", args=args)
+    
+
 @app.route("/averages")
 def showAverages():
     dataset = app.config['DATASET']

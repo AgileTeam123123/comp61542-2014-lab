@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+{% block content %}
+<h1>{{ args.title }}</h1>
+<!-- Content of search page -->
+
+    <form action="/search/authors" method="get">
+        Author: <input type="text" name="name"><br>
+        <input type="submit">
+    </form>
+    {% endblock %}
