@@ -4,6 +4,12 @@
 
 <h1>{{ args.title }}</h1>
 
+<script type="text/javascript">
+    $().ready(function() {
+        $('table').addClass("myTable");
+        $(".myTable").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false});
+    });
+</script>
 <table>
   <thead>
     <tr>

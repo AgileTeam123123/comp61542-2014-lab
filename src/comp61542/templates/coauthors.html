@@ -4,6 +4,14 @@
 <h1>{{ args.title }}</h1>
 
 <form name="input" action="/coauthors" method="get" data-ajax="false" onSubmit="validateForm(this)">
+<script type="text/javascript">
+    $().ready(function() {
+        $('table').addClass("coauthorTable");
+        $(".coauthorTable").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false});
+    });
+</script>
+    
+    
 Start year: <input type="number" name="start_year" min="{{ args.min_year }}" max="{{ args.max_year }}" value="{{ args.start_year }}">
 End year: <input type="number" name="end_year" min="{{ args.min_year }}" max="{{ args.max_year }}" value="{{ args.end_year }}">
 Publication type:
@@ -16,7 +24,7 @@ Publication type:
   <option value="3"{% if args.pub_type == 3 %} selected="selected"{% endif %}>Book Chapter</option>
 </select>
 
-<input type="submit" value="Submit">
+<input class="ui-state-default" type="submit" value="Submit">
 </form>
 
 <h1>{{ args.pub_str }} in {{ args.start_year }} {% if args.start_year != args.end_year %} - {{ args.end_year }}{% endif %}</h1>
