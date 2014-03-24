@@ -159,6 +159,33 @@ class TestDatabase(unittest.TestCase):
             "incorrect year in result")
         self.assertEqual(data[0][1], 2,
             "incorrect number of authors in result")
+            
+    def test_search_results_count(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
+        header, data = db.search_authors_by_name("Stefano Ceri")
+        self.assertEqual(len(data), 1, "Incorrect number of search results")
+        header, data = db.search_authors_by_name("NONAME")
+        self.assertEqual(len(data), 0, "Incorrect number of search results")
+        header, data = db.search_authors_by_name("")
+        self.assertEqual(len(data),1139, "Incorrect number of search results")
+        header, data = db.search_authors_by_name("*")
+        self.assertEqual(len(data), 0, "Incorrect number of search results")
+        
+    def test_search_results_results(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
+        header, data = db.search_authors_by_name("Stefano Ceri")
+        self.assertEqual(data[0][8], 218, "Incorrect results")
+        header, data = db.search_authors_by_name("McNab")
+        self.assertEqual(data[0][6], 0, "Incorrect results")
+        header, data = db.search_authors_by_name("Goble")
+        self.assertEqual(data[0][1],115, "Incorrect results")
+        # test First appearences
+        header, data = db.search_authors_by_name("Stefano Ceri")
+        self.assertEqual(data[0][5], 86, "Incorrect results for First Appearences")
+        # test last appearences
+        self.assertEqual(data[0][6], 33, "Incorrect results for Last Appearences")
 
 if __name__ == '__main__':
     unittest.main()
