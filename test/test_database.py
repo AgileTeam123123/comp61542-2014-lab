@@ -165,6 +165,8 @@ class TestDatabase(unittest.TestCase):
         self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
         header, data = db.search_authors_by_name("Stefano Ceri")
         self.assertEqual(len(data), 1, "Incorrect number of search results")
+        header, data = db.search_authors_by_name("STEFANO CERI")
+        self.assertEqual(len(data), 1, "Incorrect number of search results")
         header, data = db.search_authors_by_name("NONAME")
         self.assertEqual(len(data), 0, "Incorrect number of search results")
         header, data = db.search_authors_by_name("")
