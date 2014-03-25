@@ -33,6 +33,7 @@ def authorSearch():
         name = request.args.get("name")
     
     args["data"] = db.search_authors_by_name(name)
+    args['links'] = 1
         
     return render_template("statistics_details.html", args=args)
 
@@ -41,9 +42,12 @@ def showAuthorStats(id):
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
     args = {"dataset":dataset, "id":"search results"}
-    args['title'] = "Author Information"
 
-    args['data'] = db.get_author_stats(int(id))
+    author_name, args['data'] = db.get_author_stats(int(id))
+    
+    print "got here"
+    
+    args['title'] = "Author Information: " + author_name
     
     print "pre-return"
     

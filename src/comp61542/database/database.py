@@ -123,17 +123,28 @@ class Database:
         data = [ [self.authors[i].name] + astats[i] + [astats[i][0] + astats[i][1] + astats[i][2] + astats[i][3]]
             for i in sAuthors ]
             
-        return (header, data)    
+        indexes = sAuthors
+            
+        return (header, data, indexes)    
         
     def get_author_stats(self, author_id):
         author_stats = {}
         
+        author = self.authors[author_id]
         
         header = ("Overall", "Journal Articles", "Conference Papers", "Books", "Book Chapters")        
         author_stats["header"] = header
         
+        times_coauthored = 0
+        
         ##### Publication statistics
         pubstats = [0,0,0,0,0]
+        
+        for p in self.publications:
+            author_count = len(p.authors)
+            for a in p.authors:
+                if (a == author_id and author_count > 1):
+                    times_coauthored = times_coauthored + 1
         
         for p in self.publications:
             for a in p.authors:
@@ -234,14 +245,11 @@ class Database:
                         sole_author_stats[4] += 1
                         
         author_stats["sole_author_data"] = sole_author_stats
+        author_stats["times_coauthored"] = times_coauthored
                         
         print author_stats
         
-        print header
-        print pubstats
-        print first_author_stats
-        
-        return (author_stats)  
+        return (author.name, author_stats)  
 
     def get_average_authors_per_publication(self, av):
         header = ("Conference Paper", "Journal", "Book", "Book Chapter", "All Publications")
