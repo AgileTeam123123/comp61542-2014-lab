@@ -95,7 +95,7 @@ class Database:
         
         ## case sensitive, fix
         for i in range(0, len(self.authors)):
-            if name in self.authors[i].name:
+            if name.lower() in self.authors[i].name.lower():
                 sAuthors.append(i)
 
         astats = [ [0, 0, 0, 0, 0, 0, 0] for _ in range(len(self.authors)) ]
