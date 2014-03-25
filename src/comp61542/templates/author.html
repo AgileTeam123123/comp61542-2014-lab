@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+{% block content %}
+
+<h1>{{ args.title }}</h1>
+
+<script type="text/javascript">
+    $().ready(function() {
+        $('table').addClass("myTable");
+        $(".myTable").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false});
+    });
+</script>
+<table>
+  <thead>
+    <tr>
+    {% for column in args.data["header"] %}
+      <th>{{ column }}</th>
+    {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+    {% for column in args.data["publications_data"] %}
+      <td>{{ column }}</td>
+    {% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+
+<table>
+  <thead>
+    <tr>
+    {% for column in args.data["header"] %}
+      <th>{{ column }}</th>
+    {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+    {% for column in args.data["first_author_data"] %}
+      <td>{{ column }}</td>
+    {% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+
+<table>
+  <thead>
+    <tr>
+    {% for column in args.data["header"] %}
+      <th>{{ column }}</th>
+    {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+    {% for column in args.data["last_author_data"] %}
+      <td>{{ column }}</td>
+    {% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+
+<table>
+  <thead>
+    <tr>
+    {% for column in args.data["header"] %}
+      <th>{{ column }}</th>
+    {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+    {% for column in args.data["sole_author_data"] %}
+      <td>{{ column }}</td>
+    {% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}

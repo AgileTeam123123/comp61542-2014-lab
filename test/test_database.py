@@ -178,16 +178,19 @@ class TestDatabase(unittest.TestCase):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
         header, data = db.search_authors_by_name("Stefano Ceri")
-        self.assertEqual(data[0][8], 218, "Incorrect results")
+        self.assertEqual(data[0][9], 218, "Incorrect results: Ceri")
         header, data = db.search_authors_by_name("McNab")
-        self.assertEqual(data[0][6], 0, "Incorrect results")
+        self.assertEqual(data[0][6], 0, "Incorrect results: McNab")
         header, data = db.search_authors_by_name("Goble")
-        self.assertEqual(data[0][1],115, "Incorrect results")
-        # test First appearences
+        self.assertEqual(data[0][1],115, "Incorrect results: Goble")
         header, data = db.search_authors_by_name("Stefano Ceri")
-        self.assertEqual(data[0][5], 86, "Incorrect results for First Appearences")
+        # test First appearences
+        self.assertEqual(data[0][5], 78, "Incorrect results for First Appearences")
         # test last appearences
-        self.assertEqual(data[0][6], 33, "Incorrect results for Last Appearences")
+        self.assertEqual(data[0][6], 25, "Incorrect results for Last Appearences")
+        # test Sole appearences
+        self.assertEqual(data[0][7], 8, "Incorrect results for Sole Appearences")
+        
 
 if __name__ == '__main__':
     unittest.main()

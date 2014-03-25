@@ -89,7 +89,10 @@ class Database:
         return (header, data)
     
     def search_authors_by_name(self, name):
-        header = ("Name", "Number of conference papers", "Number of journals", "Number of books", "Number of book chapters", "Times appeared first", "Times appeared last", "Times coauthored a paper", "Total appearences")
+        header = ("Name", "Number of conference papers", "Number of journals", 
+        "Number of books", "Number of book chapters", "Times appeared first", 
+        "Times appeared last", "Times sole author", "Times coauthored a paper", 
+        "Total appearences")
         
         sAuthors = []
         
@@ -98,25 +101,147 @@ class Database:
             if name.lower() in self.authors[i].name.lower():
                 sAuthors.append(i)
 
-        astats = [ [0, 0, 0, 0, 0, 0, 0] for _ in range(len(self.authors)) ]
+        
+
+        astats = [ [0, 0, 0, 0, 0, 0, 0, 0] for _ in range(len(self.authors)) ]
         for p in self.publications:
             author_count = len(p.authors)
             for a in p.authors:
                 astats[a][p.pub_type] += 1
-                # if appeared first:
-                if a == p.authors[0]:
+                # Sole author
+                if (author_count == 1):
+                    astats[a][6] += 1
+                # first author
+                elif a == p.authors[0]:
                     astats[a][4] += 1
-                # if appeared last:
-                if a == p.authors[author_count - 1]:
+                # last author
+                elif a == p.authors[author_count - 1]:
                     astats[a][5] += 1
                 if author_count > 1:
-                    astats[a][6] += 1
+                    astats[a][7] += 1
  
         data = [ [self.authors[i].name] + astats[i] + [astats[i][0] + astats[i][1] + astats[i][2] + astats[i][3]]
             for i in sAuthors ]
             
         return (header, data)    
         
+    def get_author_stats(self, author_id):
+        author_stats = {}
+        
+        
+        header = ("Overall", "Journal Articles", "Conference Papers", "Books", "Book Chapters")        
+        author_stats["header"] = header
+        
+        ##### Publication statistics
+        pubstats = [0,0,0,0,0]
+        
+        for p in self.publications:
+            for a in p.authors:
+                if (a == author_id):
+                    # conf = 0
+                    # journal = 1
+                    # book = 2
+                    # bookchapter = 3
+                    if p.pub_type == 0:
+                        pubstats[0] += 1
+                        pubstats[2] += 1
+                    elif p.pub_type == 1:
+                        pubstats[0] += 1
+                        pubstats[1] += 1
+                    elif p.pub_type == 2:
+                        pubstats[0] += 1
+                        pubstats[3] += 1
+                    elif p.pub_type == 3:
+                        pubstats[0] += 1
+                        pubstats[4] += 1
+                    
+        author_stats["publications_data"] = pubstats
+        
+        ##### First Author Statistics     
+        first_author_stats = [0,0,0,0,0]
+        
+        for p in self.publications:
+            author_count = len(p.authors)
+            for a in p.authors:
+                if (p.authors[0] == a and author_count > 1):
+                    # conf = 0
+                    # journal = 1
+                    # book = 2
+                    # bookchapter = 3
+                    if p.pub_type == 0:
+                        first_author_stats[0] += 1
+                        first_author_stats[2] += 1
+                    elif p.pub_type == 1:
+                        first_author_stats[0] += 1
+                        first_author_stats[1] += 1
+                    elif p.pub_type == 2:
+                        first_author_stats[0] += 1
+                        first_author_stats[3] += 1
+                    elif p.pub_type == 3:
+                        first_author_stats[0] += 1
+                        first_author_stats[4] += 1
+                        
+        author_stats["first_author_data"] = first_author_stats
+        
+        ##### Last Author Statistics    
+        last_author_stats = [0,0,0,0,0]
+        
+        for p in self.publications:
+            author_count = len(p.authors)
+            for a in p.authors:
+                if (p.authors[author_count-1] == a and author_count > 1):
+                    # conf = 0
+                    # journal = 1
+                    # book = 2
+                    # bookchapter = 3
+                    if p.pub_type == 0:
+                        last_author_stats[0] += 1
+                        last_author_stats[2] += 1
+                    elif p.pub_type == 1:
+                        last_author_stats[0] += 1
+                        last_author_stats[1] += 1
+                    elif p.pub_type == 2:
+                        last_author_stats[0] += 1
+                        last_author_stats[3] += 1
+                    elif p.pub_type == 3:
+                        last_author_stats[0] += 1
+                        last_author_stats[4] += 1
+                        
+        author_stats["last_author_data"] = last_author_stats
+        
+        ##### Sole Author Statistics    
+        sole_author_stats = [0,0,0,0,0]
+        
+        for p in self.publications:
+            author_count = len(p.authors)
+            for a in p.authors:
+                if (p.authors[0] == a and author_count == 1):
+                    # conf = 0
+                    # journal = 1
+                    # book = 2
+                    # bookchapter = 3
+                    if p.pub_type == 0:
+                        sole_author_stats[0] += 1
+                        sole_author_stats[2] += 1
+                    elif p.pub_type == 1:
+                        sole_author_stats[0] += 1
+                        sole_author_stats[1] += 1
+                    elif p.pub_type == 2:
+                        sole_author_stats[0] += 1
+                        sole_author_stats[3] += 1
+                    elif p.pub_type == 3:
+                        sole_author_stats[0] += 1
+                        sole_author_stats[4] += 1
+                        
+        author_stats["sole_author_data"] = sole_author_stats
+                        
+        print author_stats
+        
+        print header
+        print pubstats
+        print first_author_stats
+        
+        return (author_stats)  
 
     def get_average_authors_per_publication(self, av):
         header = ("Conference Paper", "Journal", "Book", "Book Chapter", "All Publications")
@@ -240,25 +365,35 @@ class Database:
 
 
     def get_publications_by_author(self):
-        header = ("Name", "Number of conference papers", "Number of journals", "Number of books", "Number of book chapters", "Times appeared first", "Times appeared last", "Times coauthored a paper", "Total appearences")
+        header = ("Name", "Number of conference papers", "Number of journals", 
+        "Number of books", "Number of book chapters", "Times appeared first", 
+        "Times appeared last", "Times sole author", "Times coauthored a paper", 
+        "Total appearences")
 
-        astats = [ [0, 0, 0, 0, 0, 0, 0] for _ in range(len(self.authors)) ]
+        astats = [ [0, 0, 0, 0, 0, 0, 0, 0] for _ in range(len(self.authors)) ]
         for p in self.publications:
             author_count = len(p.authors)
             for a in p.authors:
                 astats[a][p.pub_type] += 1
-                # if appeared first:
-                if a == p.authors[0]:
+                # Sole author
+                if (author_count == 1):
+                    astats[a][6] += 1
+                # first author
+                elif a == p.authors[0]:
                     astats[a][4] += 1
-                # if appeared last:
-                if a == p.authors[author_count - 1]:
+                # last author
+                elif a == p.authors[author_count - 1]:
                     astats[a][5] += 1
                 if author_count > 1:
-                    astats[a][6] += 1
+                    astats[a][7] += 1
+                
 
         data = [ [self.authors[i].name] + astats[i] + [astats[i][0] + astats[i][1] + astats[i][2] + astats[i][3]]
             for i in range(len(astats)) ]
-        return (header, data)
+        
+        indexes = range(len(self.authors))
+        
+        return (header, data, indexes)
 
     def get_average_authors_per_publication_by_year(self, av):
         header = ("Year", "Conference papers",

@@ -7,26 +7,46 @@
 <script type="text/javascript">
     $().ready(function() {
         $('table').addClass("myTable");
-        $(".myTable").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false});
+        $(".myTable").dataTable({"bJQueryUI": true, "bPaginate": false, "bFilter": false});
     });
 </script>
 <table>
-  <thead>
-    <tr>
-    {% for column in args.data[0] %}
-      <th>{{ column }}</th>
-    {% endfor %}
-    </tr>
-  </thead>
+    <thead>
+        <tr>
+            {% for column in args.data[0] %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
 
-  <tbody>
-  {% for row in args.data[1] %}
-    <tr>
-    {% for data_item in row %}
-      <td>{{ data_item }}</td>
-    {% endfor %}
-    </tr>
-  {% endfor %}
-  </tbody>
+    <tbody>
+        {% if args.links == 1 %}
+            {% for row in args.data[1] %}
+                <tr>
+                {% set bob = 0 %}
+                {% set index = loop.index %}
+                {% for data_item in row %}
+                    {% if bob == 0 %}
+                        <td><a href="/author/{{ args.data[2][index - 1] }} ">
+                                  {{ data_item }}
+                            </a>
+                        </td>
+                        {% set bob = 1 %}
+                    {% else %}
+                        <td>{{ data_item }}</td>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        {% else %}
+            {% for row in args.data[1] %}
+                <tr>
+                {% for data_item in row %}
+                    <td>{{ data_item }}</td>
+                {% endfor %}   
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </tbody>
 </table>
 {% endblock %}

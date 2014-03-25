@@ -35,7 +35,19 @@ def authorSearch():
     args["data"] = db.search_authors_by_name(name)
         
     return render_template("statistics_details.html", args=args)
+
+@app.route("/author/<id>")
+def showAuthorStats(id):
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset":dataset, "id":"search results"}
+    args['title'] = "Author Information"
+
+    args['data'] = db.get_author_stats(int(id))
     
+    print "pre-return"
+    
+    return render_template('author.html', args=args)
 
 @app.route("/averages")
 def showAverages():
@@ -132,6 +144,7 @@ def showPublicationSummary(status):
     if (status == "publication_author"):
         args["title"] = "Author Publication"
         args["data"] = db.get_publications_by_author()
+        args['links'] = 1
 
     if (status == "publication_year"):
         args["title"] = "Publication by Year"
