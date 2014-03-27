@@ -26,7 +26,7 @@ def authorSearch():
     db = app.config['DATABASE']
     args = {"dataset":dataset, "id":"search results"}
     args['title'] = "Search Results"
-    
+    args['tableID'] = "searchRes"
     name = "bob"
     
     if "name" in request.args:
@@ -36,7 +36,7 @@ def authorSearch():
     args['links'] = 1
         
     return render_template("statistics_details.html", args=args)
-
+    
 @app.route("/author/<id>")
 def showAuthorStats(id):
     dataset = app.config['DATASET']
@@ -144,18 +144,22 @@ def showPublicationSummary(status):
     if (status == "publication_summary"):
         args["title"] = "Publication Summary"
         args["data"] = db.get_publication_summary()
+        args['tableID'] = "pubSummary"
 
     if (status == "publication_author"):
         args["title"] = "Author Publication"
         args["data"] = db.get_publications_by_author()
+        args['tableID'] = "authPub"
         args['links'] = 1
 
     if (status == "publication_year"):
         args["title"] = "Publication by Year"
         args["data"] = db.get_publications_by_year()
+        args['tableID'] = "pubYear"
 
     if (status == "author_year"):
         args["title"] = "Author by Year"
         args["data"] = db.get_author_totals_by_year()
+        args['tableID'] = "authYear"
 
     return render_template('statistics_details.html', args=args)
