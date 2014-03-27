@@ -158,6 +158,9 @@ class Database:
         data = [ [self.authors[i].name] + astats[i] + [astats[i][0] + astats[i][1] + astats[i][2] + astats[i][3]]
             for i in sAuthors ]
             
+        for entry in data:
+            entry[0] = ", ".join(entry[0].rsplit(None, 1)[::-1])
+            
         indexes = sAuthors
             
         return (header, data, indexes)    
@@ -208,24 +211,23 @@ class Database:
         
         for p in self.publications:
             author_count = len(p.authors)
-            for a in p.authors:
-                if (p.authors[0] == a and author_count > 1):
-                    # conf = 0
-                    # journal = 1
-                    # book = 2
-                    # bookchapter = 3
-                    if p.pub_type == 0:
-                        first_author_stats[0] += 1
-                        first_author_stats[2] += 1
-                    elif p.pub_type == 1:
-                        first_author_stats[0] += 1
-                        first_author_stats[1] += 1
-                    elif p.pub_type == 2:
-                        first_author_stats[0] += 1
-                        first_author_stats[3] += 1
-                    elif p.pub_type == 3:
-                        first_author_stats[0] += 1
-                        first_author_stats[4] += 1
+            if (p.authors[0] == author_id and author_count > 1):
+                # conf = 0
+                # journal = 1
+                # book = 2
+                # bookchapter = 3
+                if p.pub_type == 0:
+                    first_author_stats[0] += 1
+                    first_author_stats[2] += 1
+                elif p.pub_type == 1:
+                    first_author_stats[0] += 1
+                    first_author_stats[1] += 1
+                elif p.pub_type == 2:
+                    first_author_stats[0] += 1
+                    first_author_stats[3] += 1
+                elif p.pub_type == 3:
+                    first_author_stats[0] += 1
+                    first_author_stats[4] += 1
                         
         author_stats["first_author_data"] = first_author_stats
         
@@ -234,24 +236,23 @@ class Database:
         
         for p in self.publications:
             author_count = len(p.authors)
-            for a in p.authors:
-                if (p.authors[author_count-1] == a and author_count > 1):
-                    # conf = 0
-                    # journal = 1
-                    # book = 2
-                    # bookchapter = 3
-                    if p.pub_type == 0:
-                        last_author_stats[0] += 1
-                        last_author_stats[2] += 1
-                    elif p.pub_type == 1:
-                        last_author_stats[0] += 1
-                        last_author_stats[1] += 1
-                    elif p.pub_type == 2:
-                        last_author_stats[0] += 1
-                        last_author_stats[3] += 1
-                    elif p.pub_type == 3:
-                        last_author_stats[0] += 1
-                        last_author_stats[4] += 1
+            if (p.authors[author_count-1] == author_id and author_count > 1):
+                # conf = 0
+                # journal = 1
+                # book = 2
+                # bookchapter = 3
+                if p.pub_type == 0:
+                    last_author_stats[0] += 1
+                    last_author_stats[2] += 1
+                elif p.pub_type == 1:
+                    last_author_stats[0] += 1
+                    last_author_stats[1] += 1
+                elif p.pub_type == 2:
+                    last_author_stats[0] += 1
+                    last_author_stats[3] += 1
+                elif p.pub_type == 3:
+                    last_author_stats[0] += 1
+                    last_author_stats[4] += 1
                         
         author_stats["last_author_data"] = last_author_stats
         
@@ -260,24 +261,23 @@ class Database:
         
         for p in self.publications:
             author_count = len(p.authors)
-            for a in p.authors:
-                if (p.authors[0] == a and author_count == 1):
-                    # conf = 0
-                    # journal = 1
-                    # book = 2
-                    # bookchapter = 3
-                    if p.pub_type == 0:
-                        sole_author_stats[0] += 1
-                        sole_author_stats[2] += 1
-                    elif p.pub_type == 1:
-                        sole_author_stats[0] += 1
-                        sole_author_stats[1] += 1
-                    elif p.pub_type == 2:
-                        sole_author_stats[0] += 1
-                        sole_author_stats[3] += 1
-                    elif p.pub_type == 3:
-                        sole_author_stats[0] += 1
-                        sole_author_stats[4] += 1
+            if (p.authors[0] == author_id and author_count == 1):
+                # conf = 0
+                # journal = 1
+                # book = 2
+                # bookchapter = 3
+                if p.pub_type == 0:
+                    sole_author_stats[0] += 1
+                    sole_author_stats[2] += 1
+                elif p.pub_type == 1:
+                    sole_author_stats[0] += 1
+                    sole_author_stats[1] += 1
+                elif p.pub_type == 2:
+                    sole_author_stats[0] += 1
+                    sole_author_stats[3] += 1
+                elif p.pub_type == 3:
+                    sole_author_stats[0] += 1
+                    sole_author_stats[4] += 1
                         
         author_stats["sole_author_data"] = sole_author_stats
         author_stats["times_coauthored"] = times_coauthored
@@ -433,6 +433,9 @@ class Database:
 
         data = [ [self.authors[i].name] + astats[i] + [astats[i][0] + astats[i][1] + astats[i][2] + astats[i][3]]
             for i in range(len(astats)) ]
+            
+        for entry in data:
+            entry[0] = ", ".join(entry[0].rsplit(None, 1)[::-1])
         
         indexes = range(len(self.authors))
         
