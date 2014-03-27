@@ -8,10 +8,10 @@
         $().ready(function() {
         $('table').addClass("myTable");
         $("#authPub,#searchRes").removeClass("myTable").addClass("myTable2");
-        $(".myTable").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false
+        $(".myTable").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false, "aaSorting":[]
         });
         
-        $(".myTable2").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false, "secondSort": [ 0, "asc" ]
+        $(".myTable2").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false, "secondSort": [ 0, "asc" ], "aaSorting":[]
         });
     });
 </script>
