@@ -96,12 +96,47 @@ class Database:
         
         sAuthors = []
         
-        ## case sensitive, fix
+        ## Whole last name
         for i in range(0, len(self.authors)):
-            if name.lower() in self.authors[i].name.lower():
+            strArray = self.authors[i].name.split(" ")
+            lastName = strArray[len(strArray)-1]
+            if name.lower() == lastName.lower():
+                sAuthors.append(i)
+        
+        ## Start of last name
+        for i in range(0, len(self.authors)):
+            strArray = self.authors[i].name.split(" ")
+            lastName = strArray[len(strArray)-1]
+            lastName = " " + lastName
+            if (" " + name.lower()) in lastName.lower() and i not in sAuthors:
                 sAuthors.append(i)
 
-        
+        ## Whole first name
+        for i in range(0, len(self.authors)):
+            strArray = self.authors[i].name.split(" ")
+            firstName = strArray[0]
+            if name.lower() == firstName.lower() and i not in sAuthors:
+                sAuthors.append(i)
+                
+        ## start of first name
+        for i in range(0, len(self.authors)):
+            strArray = self.authors[i].name.split(" ")
+            firstName = " " + strArray[0]
+            if (" " + name.lower()) in firstName.lower() and i not in sAuthors:
+                sAuthors.append(i)
+                
+        ## end of last name
+        for i in range(0, len(self.authors)):
+            strArray = self.authors[i].name.split(" ")
+            lastName = strArray[len(strArray)-1]
+            lastName = lastName + " "
+            if (name.lower() + " ") in lastName.lower() and i not in sAuthors:
+                sAuthors.append(i)
+                
+        ## rest
+        for i in range(0, len(self.authors)):
+            if name.lower() in self.authors[i].name.lower() and i not in sAuthors:
+                sAuthors.append(i)
 
         astats = [ [0, 0, 0, 0, 0, 0, 0, 0] for _ in range(len(self.authors)) ]
         for p in self.publications:
