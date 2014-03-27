@@ -4177,7 +4177,55 @@
 						}
 					}
 					else
-					{
+					{ 
+                                            
+                                          /* If SECOND SORTING */
+                                          if (oSettings.secondSort!=='none'){
+                                              if ( oSettings.aaSorting.length == 1 && oSettings.aaSorting[0][0] == iDataIndex )
+						{
+							iColumn = oSettings.aaSorting[0][0];
+							iNextSort = oSettings.aaSorting[0][2]+1;
+                                                        //alert(iNextSort);
+							if ( !oSettings.aoColumns[iColumn].asSorting[iNextSort] )
+							{
+								iNextSort = 0;
+							}
+							oSettings.aaSorting[0][1] = oSettings.aoColumns[iColumn].asSorting[iNextSort];
+							oSettings.aaSorting[0][2] = iNextSort;
+						}
+                                              
+                                              
+                                              else  if ( oSettings.aaSorting.length == 2 && oSettings.aaSorting[0][0] == iDataIndex )
+						{
+							iColumn = oSettings.aaSorting[0][0];
+							iNextSort = oSettings.aaSorting[0][2]+1;
+							if ( !oSettings.aoColumns[iColumn].asSorting[iNextSort] )
+							{
+								iNextSort = 0;
+							}
+							oSettings.aaSorting[0][1] = oSettings.aoColumns[iColumn].asSorting[iNextSort];
+							oSettings.aaSorting[0][2] = iNextSort;
+						}
+						else
+						{
+							oSettings.aaSorting.splice( 0, oSettings.aaSorting.length );
+							oSettings.aaSorting.push( [ iDataIndex, 
+								oSettings.aoColumns[iDataIndex].asSorting[0], 0 ] );
+                                                            
+                                                            
+                                                     if (oSettings.secondSort!=='none'){
+                                                    var secondCol = oSettings.secondSort[0];
+                                                    var secondColSort = oSettings.secondSort[1];
+                                                    if(secondCol !== iDataIndex){
+                                                        oSettings.aaSorting.push( [ secondCol, secondColSort, 0 ] );
+                                                    }
+                                                  }
+                                                            
+						}
+                                        }
+                                         
+                                        else {/* No second sorting*/
+
 						/* If no shift key then single column sort */
 						if ( oSettings.aaSorting.length == 1 && oSettings.aaSorting[0][0] == iDataIndex )
 						{
@@ -4196,8 +4244,10 @@
 							oSettings.aaSorting.push( [ iDataIndex, 
 								oSettings.aoColumns[iDataIndex].asSorting[0], 0 ] );
 						}
+                                        }    
+                                                
+                                                
 					}
-					
 					/* Run the sort */
 					_fnSort( oSettings );
 				}; /* /fnInnerSorting */
@@ -4256,6 +4306,8 @@
 			else
 			{
 				aaSort = oSettings.aaSorting.slice();
+                                //aaSort = oSettings.aaSortingFixed.concat( oSettings.aaSorting ); //DELETE
+                                //aaSort = oSettings.aaSorting.concat( oSettings.aaSortingFixed );//DELETE
 			}
 			
 			/* Apply the required classes to the header */
@@ -6488,6 +6540,7 @@
 			_fnMap( oSettings, oInit, "aoSearchCols", "aoPreSearchCols" );
 			_fnMap( oSettings, oInit, "iDisplayLength", "_iDisplayLength" );
 			_fnMap( oSettings, oInit, "bJQueryUI", "bJUI" );
+                        _fnMap( oSettings, oInit, "secondSort" );//DELETE
 			_fnMap( oSettings, oInit, "fnCookieCallback" );
 			_fnMap( oSettings, oInit, "fnStateLoad" );
 			_fnMap( oSettings, oInit, "fnStateSave" );
@@ -8167,7 +8220,7 @@
 		 *    } );
 		 */
 		"bJQueryUI": false,
-	
+                "secondSort": "none",//DELETE
 	
 		/**
 		 * Allows the end user to select the size of a formatted page from a select
