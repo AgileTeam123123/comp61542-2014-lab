@@ -104,7 +104,7 @@ class TestDatabase(unittest.TestCase):
     def test_get_publications_by_author(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))
-        header, data = db.get_publications_by_author()
+        header, data, indexes = db.get_publications_by_author()
         self.assertEqual(len(header), len(data[0]),
             "header and data column size doesn't match")
         self.assertEqual(len(data), 2,
@@ -163,27 +163,27 @@ class TestDatabase(unittest.TestCase):
     def test_search_results_count(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
-        header, data = db.search_authors_by_name("Stefano Ceri")
+        header, data, indexes = db.search_authors_by_name("Stefano Ceri")
         self.assertEqual(len(data), 1, "Incorrect number of search results")
-        header, data = db.search_authors_by_name("STEFANO CERI")
+        header, data, indexes = db.search_authors_by_name("STEFANO CERI")
         self.assertEqual(len(data), 1, "Incorrect number of search results")
-        header, data = db.search_authors_by_name("NONAME")
+        header, data, indexes = db.search_authors_by_name("NONAME")
         self.assertEqual(len(data), 0, "Incorrect number of search results")
-        header, data = db.search_authors_by_name("")
+        header, data, indexes = db.search_authors_by_name("")
         self.assertEqual(len(data),1139, "Incorrect number of search results")
-        header, data = db.search_authors_by_name("*")
+        header, data, indexes = db.search_authors_by_name("*")
         self.assertEqual(len(data), 0, "Incorrect number of search results")
         
     def test_search_results_results(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
-        header, data = db.search_authors_by_name("Stefano Ceri")
+        header, data, indexes = db.search_authors_by_name("Stefano Ceri")
         self.assertEqual(data[0][9], 218, "Incorrect results: Ceri")
-        header, data = db.search_authors_by_name("McNab")
+        header, data, indexes = db.search_authors_by_name("McNab")
         self.assertEqual(data[0][6], 0, "Incorrect results: McNab")
-        header, data = db.search_authors_by_name("Goble")
+        header, data, indexes = db.search_authors_by_name("Goble")
         self.assertEqual(data[0][1],115, "Incorrect results: Goble")
-        header, data = db.search_authors_by_name("Stefano Ceri")
+        header, data, indexes = db.search_authors_by_name("Stefano Ceri")
         # test First appearences
         self.assertEqual(data[0][5], 78, "Incorrect results for First Appearences")
         # test last appearences
@@ -191,6 +191,66 @@ class TestDatabase(unittest.TestCase):
         # test Sole appearences
         self.assertEqual(data[0][7], 8, "Incorrect results for Sole Appearences")
         
+    def test_search_results_precendence(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "searchPrecedence.xml")))
+        header, data, indexes = db.search_authors_by_name("Sam")
+        names = ["Sam, Alice", "Sam, Brian", "Sammer, Alice", "Sammer, Brian", "Samming, Alice", "Samming, Brian", "Alice, Sam", "Brian, Sam", "Alice, Samuel", "Brian, Samuel", "Esam, Alice", "Esam, Brian"]
+        searchResults = []
+        for data_entry in data:
+            searchResults.append(data_entry[0])
+        self.assertEqual(names, searchResults, "search results precedence incorrect")
+        
+        
+    def test_author_page_stats(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
+        name, data = db.get_author_stats(0)    
+        self.assertEqual(name, "Stefano Ceri", "incorrect name found")
+        self.assertEqual(data["publications_data"][0], 218, "incorrect overall publications value for stefano ceri")
+        self.assertEqual(data["publications_data"][3], 6, "incorrect overall books value for stefano ceri")
+        self.assertEqual(data["sole_author_data"][0], 8, "incorrect overall sole appearences value for stefano ceri")
+        self.assertEqual(data["times_coauthored"], 210, "incorrect coauthor value for stefano ceri")
+        
+        # overall appearences
+        overallPublications = data["publications_data"][0]
+        sumOfPublications = 0
+        for i in range(1,5):
+            print i
+            sumOfPublications += data["publications_data"][i]
+            
+        print "publications_data: " + str(overallPublications)
+        self.assertEqual(overallPublications, sumOfPublications, "overall column does not equal sum of all columns")
+        
+        # first appearences
+        overallPublications = data["first_author_data"][0]
+        sumOfPublications = 0
+        for i in range(1,5):
+            print i
+            sumOfPublications += data["first_author_data"][i]
+        
+        print "first_author_data: " + str(overallPublications)
+        self.assertEqual(overallPublications, sumOfPublications, "overall column does not equal sum of all columns")
+        
+        # last appearences
+        overallPublications = data["last_author_data"][0]
+        sumOfPublications = 0
+        for i in range(1,5):
+            print i
+            sumOfPublications += data["last_author_data"][i]
+        
+        print "last_author_data: " + str(overallPublications)
+        self.assertEqual(overallPublications, sumOfPublications, "overall column does not equal sum of all columns")
+        
+        # sole appearences
+        overallPublications = data["sole_author_data"][0]
+        sumOfPublications = 0
+        for i in range(1,5):
+            print i
+            sumOfPublications += data["sole_author_data"][i]
+        
+        print "sole_author_data: " + str(overallPublications)
+        self.assertEqual(overallPublications, sumOfPublications, "overall column does not equal sum of all columns")
 
 if __name__ == '__main__':
     unittest.main()
