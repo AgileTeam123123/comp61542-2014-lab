@@ -32,10 +32,16 @@ def authorSearch():
     if "name" in request.args:
         name = request.args.get("name")
     
-    args["data"] = db.search_authors_by_name(name)
-    args['links'] = 1
-        
-    return render_template("statistics_details.html", args=args)
+    data = db.search_authors_by_name(name)
+    if len(data[2]) == 1:
+        args = {"dataset":dataset, "id":"search results"}
+        author_name, args["data"] = db.get_author_stats(data[2][0])
+        args['title'] = "Author Information: " + author_name
+        return render_template('author.html', args=args)
+    else:
+        args['links'] = 1
+        args["data"] = data
+        return render_template("statistics_details.html", args=args)
     
 @app.route("/author/<id>")
 def showAuthorStats(id):
@@ -45,11 +51,7 @@ def showAuthorStats(id):
 
     author_name, args['data'] = db.get_author_stats(int(id))
     
-    print "got here"
-    
     args['title'] = "Author Information: " + author_name
-    
-    print "pre-return"
     
     return render_template('author.html', args=args)
 
