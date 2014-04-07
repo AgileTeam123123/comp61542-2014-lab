@@ -4,9 +4,11 @@
   <head>
     <script type="text/javascript" src="../jquery/js/jquery-ui-1.10.4.custom.min.js"></script>
     <script type="text/javascript" src="../jquery/js/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="../jquery/js/agile.js"></script>
     <script type="text/javascript" src="../jquery/datatables/js/jquery.dataTables.js"></script>
     <link type="text/css" href="../jquery/css/start/jquery-ui-1.10.4.custom.css" rel="stylesheet" />
     <link type="text/css" href="../jquery/datatables/css/jquery.dataTables.css" rel="stylesheet" />
+    <link type="text/css" href="../jquery/css/myStyle.css" rel="stylesheet" />
     <title>{% block title %}{% endblock %}</title>
   </head>
 
@@ -16,17 +18,59 @@
         $("#header").addClass("ui-widget ui-widget-content");
     });
 </script>  
-  <body>     
+  <body bgcolor="#f7f7f7">     
     <div id="page">
-      <div id="header">
+      <div id="imgHeader">
+		<div id="logo">
+			<img src="../jquery/images/university-2.png" width="169" height="69" alt="The University of Manchester" />
+		</div>
+		<div id="Title">
+			<p class="purple" style="color:#660099">Research Collaborations in the School of Computer Science</p>
+		</div>
+		<div id="dbfile">COMP61542: {{ args.dataset }}</div>
+       </div>
+        
+    <div id="menu">
+       <ul role="navigation" class="banner" id="nav">
+           <li><a href="/">Home</a></li>
+           <li><a href="#home">Author Info</a>
+               <ul>
+                   <li><a href="/search">Search Author</a></li>
+                   <li><a href="/statisticsdetails/author_year">Author details by year</a></li>
+                   <!--li><a href="#home">Option A3</a></li-->
+               </ul>
+           </li>
+           <li><a href="#home">Yearly Summaries</a>
+               <ul>
+                   <li><a href="/statisticsdetails/publication_summary">Publication Summary</a></li>
+                   <li><a href="/statisticsdetails/publication_author">Publications by Author</a></li>
+                   <li><a href="/statisticsdetails/publication_year">Publications by Year</a></li>
+               </ul>
+           </li>
+           <li><a href="#home">General Statistics</a> 
+               <ul>
+                   <li><a href="/coauthors">Co-Authors Statistics</a></li>
+                   <li><a href="#home">Collaboration network</a></li>
+               </ul>
+           </li>
+           <li id="nav-space-left"><a href="#top" style="background-color:#4E0275">Top</a></li>
+      </ul>
+
+      <div id="searchBar">
+          <form action="/search/authors" method="get">
+          <input type="text" class="tftextinput" name="name" size="21" maxlength="120"><input type="submit" value="Search Author" class="tfbutton">
+          </form>
+      </div>
+    </div>
+      <!--div id="header">
         <h1>COMP61542: {{ args.dataset }}</h1>
 
         <div id="navigation">
           <a href="/">Home</a>
         </div>
-      </div>
+      </div-->
 
-      <div id="content">
+      <div id="content" style="padding-top: 6.5em">
         {% block content %}{% endblock %}
       </div>
     </div>
