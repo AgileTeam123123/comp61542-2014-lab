@@ -55,7 +55,7 @@ def showAuthorStats(id):
     
     return render_template('author.html', args=args)
 
-@app.route("/degrees_of_seperation")
+@app.route("/degrees_of_separation")
 def showDegreeOfSeperationSelector():
     dataset = app.config['DATASET']
     db = app.config['DATABASE']
@@ -84,7 +84,7 @@ def showDegreeOfSeperationSelector():
     
     return render_template('degreesSelector.html', args=args)
 
-@app.route("/degrees_of_seperation/results")
+@app.route("/degrees_of_separation/results")
 def showDegreeOfSeperationResults():
     dataset = app.config['DATASET']
     args = {"dataset":dataset}
