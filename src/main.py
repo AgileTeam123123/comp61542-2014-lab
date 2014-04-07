@@ -17,6 +17,26 @@ else:
 app.config['DATASET'] = dataset
 app.config['DATABASE'] = db
 
+# create graph here
+g = {}
+authors = db.authors
+publications = db.publications
+for index, author in enumerate(authors):
+    g[index] = []
+for publication in publications:
+    for author in publication.authors:
+        for authorToAdd in publication.authors:
+            if (authorToAdd != author):
+                if authorToAdd not in g[author]:
+                    g[author].append(authorToAdd)
+                #print authorToAdd
+                #print author
+                if author not in g[authorToAdd]:
+                    g[authorToAdd].append(author)
+                    
+                    
+app.config['Graph'] = g
+
 if "DEBUG" in os.environ:
     app.config['DEBUG'] = True
 

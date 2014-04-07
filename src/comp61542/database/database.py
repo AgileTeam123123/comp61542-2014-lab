@@ -2,6 +2,7 @@ from comp61542.statistics import average
 import itertools
 import numpy as np
 from xml.sax import handler, make_parser, SAXException
+from comp61542 import priorityDictionary
 
 PublicationType = [
     "Conference Paper", "Journal", "Book", "Book Chapter"]
@@ -285,6 +286,50 @@ class Database:
         print author_stats
         
         return (author.name, author_stats)  
+
+    # dijkstras algorithm used
+    def get_degrees_seperation(self, g, author1, author2):
+        D = {} # dictionary for final distance
+        P = {} # dictionary of predecessors
+        Q = priorityDictionary.priorityDictionary()
+        Q[author1] = 0
+        
+        for v in Q:
+            D[v] = Q[v]
+            if v == author2: break;
+
+            for w in g[v]:
+                vwLength = D[v] + 1
+                if w in D:
+                    if vwLength < D[w]:
+                        raise ValueError, "Dijkstra: found better path to already final vertext"
+                elif w not in Q or vwLength <Q[w]:
+                    Q[w] = vwLength
+                    P[w] = v
+        
+        if author2 not in D:
+            return "x"
+        
+        path = []
+        end = author2
+        start = author1
+        
+	while 1:
+		path.append(end)
+		if end == start: break
+		end = P[end]
+	path.reverse()
+        
+        """
+        print path
+        authors = []
+        for author in path:
+            authors.append(self.authors[author].name)
+            
+        print authors
+        """
+        
+        return (len(path)-1)
 
     def get_average_authors_per_publication(self, av):
         header = ("Conference Paper", "Journal", "Book", "Book Chapter", "All Publications")

@@ -55,6 +55,79 @@ def showAuthorStats(id):
     
     return render_template('author.html', args=args)
 
+@app.route("/degrees_of_seperation")
+def showDegreeOfSeperationSelector():
+    dataset = app.config['DATASET']
+    db = app.config['DATABASE']
+    args = {"dataset":dataset, "id":"degrees of seperation"}
+    args['title'] = "Degrees of Seperation"
+    
+    # get list of names
+    authors = db.authors
+    names = []
+    for author in authors:
+        names.append(author.name)
+    
+    # get ids, sort names, reorder ids
+    ids = {}
+    for index, name in enumerate(names):
+        names[index] = ", ".join(name.rsplit(None, 1)[::-1])
+        ids[names[index]] = index
+    names.sort()
+    newIds = []
+    for name in names:
+        newIds.append(ids[name])
+    
+    ## send arguments to args
+    args['names'] = names
+    args['ids'] = newIds
+    
+    return render_template('degreesSelector.html', args=args)
+
+@app.route("/degrees_of_seperation/results")
+def showDegreeOfSeperationResults():
+    dataset = app.config['DATASET']
+    args = {"dataset":dataset}
+    db = app.config['DATABASE']
+    args['title'] = "Degrees of Seperation: results"
+    
+    author1 = 0
+    author2 = 0
+    if "author1" in request.args:
+        author1 = request.args.get("author1")
+    if "author2" in request.args:
+        author2 = request.args.get("author2")
+        
+    g = app.config['Graph']
+    degrees = db.get_degrees_seperation(g, int(author1), int(author2))
+    
+    args['degrees'] = degrees
+    args['author1'] = db.authors[int(author1)].name
+    args['author2'] = db.authors[int(author2)].name
+    
+    
+    # get list of names
+    authors = db.authors
+    names = []
+    for author in authors:
+        names.append(author.name)
+    
+    # get ids, sort names, reorder ids
+    ids = {}
+    for index, name in enumerate(names):
+        names[index] = ", ".join(name.rsplit(None, 1)[::-1])
+        ids[names[index]] = index
+    names.sort()
+    newIds = []
+    for name in names:
+        newIds.append(ids[name])
+    
+    ## send arguments to args
+    args['names'] = names
+    args['ids'] = newIds
+
+    return render_template('degreesResults.html', args=args)
+
 @app.route("/averages")
 def showAverages():
     dataset = app.config['DATASET']
