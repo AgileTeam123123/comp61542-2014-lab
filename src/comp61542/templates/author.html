@@ -4,88 +4,44 @@
 
 <h1 class="screenHeading">{{ args.title }}</h1>
 
-<script type="text/javascript">
-    $().ready(function() {
-        $('table').addClass("myTable");
-        $(".myTable").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false});
-    });
-</script>
-
 <h2 class="screenHeading" style="font-size:1em">Publications Appeared In</h2>
 
 <table>
-  <thead>
-    <tr>
-    {% for column in args.data["header"] %}
-      <th>{{ column }}</th>
-    {% endfor %}
-    </tr>
-  </thead>
+    <thead>
+        <tr>
+            <td></td>
+            {% for column in args.data["header"] %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
 
-  <tbody>
-    <tr>
-    {% for column in args.data["publications_data"] %}
-      <td>{{ column }}</td>
-    {% endfor %}
-    </tr>
-  </tbody>
-</table>
-
-<h2 class="screenHeading" style="font-size:1em">First Appearences by Publication</h2>
-<table>
-  <thead>
-    <tr>
-    {% for column in args.data["header"] %}
-      <th>{{ column }}</th>
-    {% endfor %}
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-    {% for column in args.data["first_author_data"] %}
-      <td>{{ column }}</td>
-    {% endfor %}
-    </tr>
-  </tbody>
-</table>
-
-<h2 class="screenHeading" style="font-size:1em">Last Appearences by Publication</h2>
-<table>
-  <thead>
-    <tr>
-    {% for column in args.data["header"] %}
-      <th>{{ column }}</th>
-    {% endfor %}
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-    {% for column in args.data["last_author_data"] %}
-      <td>{{ column }}</td>
-    {% endfor %}
-    </tr>
-  </tbody>
-</table>
-
-<h2 class="screenHeading" style="font-size:1em">Sole Appearences by Publication</h2>
-<table>
-  <thead>
-    <tr>
-    {% for column in args.data["header"] %}
-      <th>{{ column }}</th>
-    {% endfor %}
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-    {% for column in args.data["sole_author_data"] %}
-      <td>{{ column }}</td>
-    {% endfor %}
-    </tr>
-  </tbody>
+    <tbody>
+        <tr>
+            <th>Total Appearances</th>
+            {% for column in args.data["publications_data"] %}
+            <td>{{ column }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>First Appearances</th>
+            {% for column in args.data["first_author_data"] %}
+            <td>{{ column }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>Last Appearances</th>
+            {% for column in args.data["last_author_data"] %}
+            <td>{{ column }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>Sole Appearances</th>
+            {% for column in args.data["sole_author_data"] %}
+            <td>{{ column }}</td>
+            {% endfor %}
+        </tr>
+    </tbody>
 </table>
 
 <h2 class="screenHeading" style="font-size:1em">Times Coauthored a publication: {{ args.data["times_coauthored"] }}</h2>
