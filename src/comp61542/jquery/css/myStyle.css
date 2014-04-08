@@ -5,6 +5,10 @@
     float:left;
 }
 
+.p {
+    font-family:Open Sans, Arial, Helvetica, sans-serif; 
+}
+
 #Title{
     font-family:Open Sans, Arial, Helvetica, sans-serif; 
     width:75%; 
