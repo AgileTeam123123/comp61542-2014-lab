@@ -174,7 +174,7 @@ class Database:
         header = ("Overall", "Journal Articles", "Conference Papers", "Books", "Book Chapters")        
         author_stats["header"] = header
         
-        times_coauthored = 0
+        times_coauthored = [0,0,0,0,0]
         
         ##### Publication statistics
         pubstats = [0,0,0,0,0]
@@ -183,7 +183,20 @@ class Database:
             author_count = len(p.authors)
             for a in p.authors:
                 if (a == author_id and author_count > 1):
-                    times_coauthored = times_coauthored + 1
+                    if (p.pub_type == 0):
+                        times_coauthored[0] +=1
+                        times_coauthored[2] +=1
+                    elif (p.pub_type == 1):
+                        times_coauthored[0] +=1
+                        times_coauthored[1] +=1
+                    elif (p.pub_type == 2):
+                        times_coauthored[0] +=1
+                        times_coauthored[3] +=1
+                    elif (p.pub_type == 3):
+                        times_coauthored[0] +=1
+                        times_coauthored[4] +=1
+                        
+        author_stats["coauthor_data"] = times_coauthored
         
         for p in self.publications:
             for a in p.authors:

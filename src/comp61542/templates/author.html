@@ -41,9 +41,13 @@
             <td>{{ column }}</td>
             {% endfor %}
         </tr>
+        <tr>
+            <th>Coauthor Appearances</th>
+            {% for column in args.data["coauthor_data"] %}
+            <td>{{ column }}</td>
+            {% endfor %}
+        </tr>
     </tbody>
 </table>
-
-<h2 class="screenHeading" style="font-size:1em">Times Coauthored a publication: {{ args.data["times_coauthored"] }}</h2>
 
 {% endblock %}
