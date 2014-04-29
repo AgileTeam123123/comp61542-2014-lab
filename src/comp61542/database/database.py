@@ -321,7 +321,7 @@ class Database:
                     P[w] = v
         
         if author2 not in D:
-            return "x"
+            return "x", []
         
         path = []
         end = author2
@@ -342,7 +342,7 @@ class Database:
         print authors
         """
         
-        return (len(path)-1)
+        return (len(path)-2), path
 
     def get_average_authors_per_publication(self, av):
         header = ("Conference Paper", "Journal", "Book", "Book Chapter", "All Publications")

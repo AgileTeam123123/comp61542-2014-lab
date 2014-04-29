@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<dblp>
+    <inproceedings>
+        <title>paper 1</title>
+        <author>AUTHOR A</author>
+        <author>AUTHOR B</author>
+        <author>AUTHOR D</author>
+        <year>9999</year>
+    </inproceedings>
+    <inproceedings>
+        <author>AUTHOR A</author>
+        <author>AUTHOR E</author>
+        <title>paper 2</title>
+        <year>9999</year>
+    </inproceedings>
+    <inproceedings>
+        <author>AUTHOR C</author>
+        <author>AUTHOR B</author>
+        <title>paper 3</title>
+        <year>9999</year>
+    </inproceedings>
+    <inproceedings>
+        <author>AUTHOR C</author>
+        <title>paper 4</title>
+        <year>9999</year>
+    </inproceedings>
+    <inproceedings>
+        <author>AUTHOR F</author>
+        <title>paper 5</title>
+        <year>9999</year>
+    </inproceedings>
+</dblp>
+<!--
+Data	
+Paper	1:	Author	A,	Author	B,	Author	D	
+Paper	2:	Author	A,	Author	E	
+Paper	3:	Author	C,	Author	B	
+Paper	4:	Author	C	
+Paper	5:	Author	F	
+	
+Results	
+	
+Author	1	 Author	2	 Degrees	of	separation	
+Author	C	 Author	D	 1	
+Author	A	 Author	B	 0	
+Author	E	 Author	C	 2	
+Author	A	 Author	F	 X	
+-->

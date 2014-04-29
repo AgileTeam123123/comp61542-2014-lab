@@ -12,7 +12,7 @@ class TestDatabase(unittest.TestCase):
     def test_read(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))
-        self.assertEqual(len(db.publications), 1)
+        self.assertEqual(len(db.publications), 2)
 
     def test_read_invalid_xml(self):
         db = database.Database()
@@ -81,9 +81,9 @@ class TestDatabase(unittest.TestCase):
             "incorrect number of columns in data")
         self.assertEqual(len(data), 2,
             "incorrect number of rows in data")
-        self.assertEqual(data[0][1], 1,
+        self.assertEqual(data[0][1], 2,
             "incorrect number of publications for conference papers")
-        self.assertEqual(data[1][1], 2,
+        self.assertEqual(data[1][1], 4,
             "incorrect number of authors for conference papers")
 
     def test_get_average_authors_per_publication_by_author(self):
@@ -107,7 +107,7 @@ class TestDatabase(unittest.TestCase):
         header, data, indexes = db.get_publications_by_author()
         self.assertEqual(len(header), len(data[0]),
             "header and data column size doesn't match")
-        self.assertEqual(len(data), 2,
+        self.assertEqual(len(data), 4,
             "incorrect number of authors")
         self.assertEqual(data[0][-1], 1,
             "incorrect total")
@@ -144,20 +144,25 @@ class TestDatabase(unittest.TestCase):
             "incorrect number of rows")
         self.assertEqual(data[0][0], 9999,
             "incorrect year in result")
-        self.assertEqual(data[0][1], 2,
+        self.assertEqual(data[0][1], 4,
             "incorrect number of authors in result")
 
     def test_get_author_totals_by_year(self):
         db = database.Database()
         self.assertTrue(db.read(path.join(self.data_dir, "simple.xml")))
         header, data = db.get_author_totals_by_year()
+        print data
         self.assertEqual(len(header), len(data[0]),
             "header and data column size doesn't match")
         self.assertEqual(len(data), 1,
             "incorrect number of rows")
         self.assertEqual(data[0][0], 9999,
             "incorrect year in result")
-        self.assertEqual(data[0][1], 2,
+            
+        string = "data[0][1]: "
+        string += str(data[0][1])
+        print string
+        self.assertEqual(data[0][1], 4,
             "incorrect number of authors in result")
             
     def test_search_results_count(self):
@@ -210,7 +215,7 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(data["publications_data"][0], 218, "incorrect overall publications value for stefano ceri")
         self.assertEqual(data["publications_data"][3], 6, "incorrect overall books value for stefano ceri")
         self.assertEqual(data["sole_author_data"][0], 8, "incorrect overall sole appearences value for stefano ceri")
-        self.assertEqual(data["times_coauthored"], 210, "incorrect coauthor value for stefano ceri")
+        self.assertEqual(data["coauthor_data"][0], 210, "incorrect coauthor value for stefano ceri")
         
         # overall appearences
         overallPublications = data["publications_data"][0]
@@ -251,6 +256,49 @@ class TestDatabase(unittest.TestCase):
         
         print "sole_author_data: " + str(overallPublications)
         self.assertEqual(overallPublications, sumOfPublications, "overall column does not equal sum of all columns")
+
+    def test_degrees_separation(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "DegreesSample.xml")))
+        
+        g = {}
+        authors = db.authors
+        publications = db.publications
+        for index, author in enumerate(authors):
+            g[index] = []
+        for publication in publications:
+            for author in publication.authors:
+                for authorToAdd in publication.authors:
+                    if (authorToAdd != author):
+                        if authorToAdd not in g[author]:
+                            g[author].append(authorToAdd)
+                        #print authorToAdd
+                        #print author
+                        if author not in g[authorToAdd]:
+                            g[authorToAdd].append(author)
+        
+        # Author A - 0
+        # Author B - 1
+        # Author C - 4
+        # Author D - 2
+        # Author E - 3
+        # Author F - 5
+        
+        # C <--> D
+        degrees, author_path = db.get_degrees_seperation(g, 4,2)
+        self.assertEqual(degrees, 1, "Author C and D not correct distance")
+        
+        # A <--> B
+        degrees, author_path = db.get_degrees_seperation(g, 0,1)
+        self.assertEqual(degrees, 0, "Author A and B not correct distance")
+        
+        # E <--> C
+        degrees, author_path = db.get_degrees_seperation(g, 3,4)
+        self.assertEqual(degrees, 2, "Author A and B not correct distance")
+        
+        # A <--> F
+        degrees, author_path = db.get_degrees_seperation(g, 0,5)
+        self.assertEqual(degrees, "x", "Author A and B not correct distance")
 
 if __name__ == '__main__':
     unittest.main()
