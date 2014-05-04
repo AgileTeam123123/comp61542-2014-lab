@@ -3,8 +3,9 @@
 {% block content %}
 
 <h1 class="screenHeading">{{ args.title }}</h1>
-
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
+    var datamatrix = [];
         $().ready(function() {
         $('table').addClass("myTable");
         $("#authPub,#searchRes").removeClass("myTable").addClass("myTable2");
@@ -13,8 +14,75 @@
         
         $(".myTable2").dataTable({"bJQueryUI": true,"bPaginate": false,"bFilter": false, "secondSort": [ 0, "asc" ], "aaSorting":[]
         });
+        
+        {% if args.title == "Author by Year"  or "Publication by Year" %}
+            var headingsArray = [];
+            {% for column in args.data[0] %} headingsArray.push("{{ column }}"); {% endfor %}
+            datamatrix.push(headingsArray);        
+            {% for row in args.data[1] %}
+                    var datarow=[];
+                    {% set bob = 0 %}
+                    {% for data_item in row %}
+                        {% if bob == 0 %}
+                            datarow.push({{ data_item}});
+                            {% set bob = 1 %}
+                        {% else %}
+                            datarow.push({{ data_item }});
+                        {% endif %}
+                    {% endfor %}   
+                    datamatrix.push(datarow);
+            {% endfor %}
+
+            $("#mytogglebtn").click(function(){
+                if($("#chart_div").css('display') == 'none'){
+                    $("#mytogglebtn").val("Show table");
+                    $("#chart_div").css('width: 100%');
+                    $("#chart_div").css('height: 700px');
+                }else{
+                    $("#mytogglebtn").val("Show graph");
+                    $("#chart_div").css('width: 100%');
+                    $("#chart_div").css('height: 700px');
+                }
+                
+                $("#chart_div").toggle();
+                $("#{{ args.tableID }},.fg-toolbar").toggle();
+            });
+            
+
+        {% endif %}
+        
     });
+    {% if args.title == "Author by Year"  or "Publication by Year" %}
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+    {% endif %}
+  
+     function drawChart() {
+      var options = {
+          title: "{{ args.title }}",
+          hAxis: {title: 'Year', titleTextStyle: {color: 'red'}},
+		  /*vAxis: { textPosition: 'none', gridlines: {color: 'transparent'}},
+                  hAxis: { textPosition: 'none', gridlines: {color: 'transparent'}},*/
+                  vAxis: { gridlines: {count: 10}},
+                  hAxis: { format: '####',gridlines: {count: 10}},
+                  pointSize: 3,
+		  legend: {position: "right"},
+		  animation:{duration: 1000, easing: 'out'}
+        };
+      var data = google.visualization.arrayToDataTable(datamatrix);
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+            $("#chart_div").hide();
+        }
+    
 </script>
+
+{% if args.title == "Author by Year" or "Publication by Year" %}
+<div id="t2gbutton_div" style="width: 100%; height: 30px; text-align: right;">
+    <input id="mytogglebtn" type="button" value="Show graph" class="tfbutton">
+</div>
+<div id="chart_div" style="width: 100%; height: 700px;"></div>
+{% endif %}
 <table id="{{ args.tableID }}">
   <thead>
     <tr>
