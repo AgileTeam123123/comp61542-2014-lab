@@ -38,7 +38,19 @@
 <h1 class="screenHeading">{{ args.title }}</h1>
 <!-- Content of search page -->
 <h3>Degrees of seperation between {{args.author1}} and {{args.author2}} is: {{args.degrees}}</h3>
-<h3>Path: {{ args.path }}</h3>
+<h3>Path:</h3>
+{% if args.degrees == "x" %}
+<h4> {{ args.author1 }} <img src="../jquery/Cross.png"> {{ args.author2 }} </h4>
+{% else %}
+    {% for name in args.path %}
+        {% if loop.index == 1 %}
+        <h4> {{ name }} 
+        {% else %}
+         <img src="../jquery/Arrow.png"> {{ name }}
+        {% endif %}
+    {% endfor %}
+        </h4>
+{% endif %}
 <h3>Search other authors</h3>
 
 <form method="get" action="/degrees_of_separation/results"> 

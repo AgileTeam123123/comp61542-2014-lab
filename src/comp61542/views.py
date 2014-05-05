@@ -105,14 +105,11 @@ def showDegreeOfSeperationResults():
     
     for author in path:
         path_names.append(db.authors[author].name)
+    
         
-    path_string = ""
-    for i, author_name in enumerate(path_names):
-        if i != 0:
-            path_string += ", "
-        path_string += author_name
-        
-    args['path'] = path_string
+    args['path'] = path_names
+    if degrees == -1:
+        degrees = 0
     args['degrees'] = degrees
     args['author1'] = db.authors[int(author1)].name
     args['author2'] = db.authors[int(author2)].name
