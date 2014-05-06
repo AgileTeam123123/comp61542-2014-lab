@@ -8,10 +8,13 @@
 {% block content %}
 <h1 class="screenHeading">{{ args.title }}</h1>
 <!-- Content of search page -->
+
+{% if args.network == 1 %}
 <script type="text/javascript" src="../jquery/dracula/raphael-min.js"></script>
 <script type="text/javascript" src="../jquery/dracula/dracula_graffle.js"></script>
 <script type="text/javascript" src="../jquery/dracula/dracula_graph.js"></script>
 <script type="text/javascript" src="../jquery/dracula/dracula_algorithms.js"></script>
+
 <script type="text/javascript">
 $().ready(function() {    
     var g = new Graph();
@@ -67,21 +70,15 @@ $().ready(function() {
     
     
     });
-    
-    
-    
-    
-    
-    
-    
-    
 </script>
+
 <div id="t2gbutton_div" style="width: 100%; height: 30px; text-align: right;">
     <input id="mytogglebtn" type="button" value="Show graph" class="tfbutton">
 </div>
 <div id="graph_container" style="width: 100%; height: 700px;"></div>
+{% endif %}
 
-
+{% if args.network == 1 %}
 <table id="network_table">
     <tr>
         <td style="vertical-align: top;">
@@ -122,6 +119,25 @@ $().ready(function() {
         </td>
     </tr>
 </table>
+{% else %}
+<table id="network_table">
+    <thead>
+        <tr>
+            <th> Authors </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for id in args.authors %}
+        <tr>
+            <td><a href="/coauthor_network?author={{ id }} ">
+                    {{ args.author_names[loop.index-1]}}
+                </a><td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 
 
 
