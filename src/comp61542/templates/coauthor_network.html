@@ -8,20 +8,93 @@
 {% block content %}
 <h1 class="screenHeading">{{ args.title }}</h1>
 <!-- Content of search page -->
+<script type="text/javascript" src="../jquery/dracula/raphael-min.js"></script>
+<script type="text/javascript" src="../jquery/dracula/dracula_graffle.js"></script>
+<script type="text/javascript" src="../jquery/dracula/dracula_graph.js"></script>
+<script type="text/javascript" src="../jquery/dracula/dracula_algorithms.js"></script>
+<script type="text/javascript">
+$().ready(function() {    
+    var g = new Graph();
+        g.addNode("{{ args.author_id }}", {  label: "{{ args.author_name }}"})
+        
+    {% for id in args.coauthor_ids %}
+        g.addNode("{{ id }}", {  label: "{{ args.coauthor_names[loop.index-1]}}"})
+        g.addEdge("{{ args.author_id }}", "{{ id }}");
+    {% endfor %}
 
-<table>
+    $("#mytogglebtn").click(function(){
+                if($("#graph_container").css('display') == 'none'){
+                    $("#mytogglebtn").val("Show table");
+                    $("#graph_container").css('width: 100%');
+                    $("#graph_container").css('height: 700px');
+                }else{
+                    $("#mytogglebtn").val("Show graph");
+                    $("#graph_container").css('width: 100%');
+                    $("#graph_container").css('height: 700px');
+                }
+                
+                $("#graph_container").toggle();
+                $("#network_table,.fg-toolbar").toggle();
+            });
+
+
+
+
+
+
+    var layouter = new Graph.Layout.Spring(g);
+    layouter.layout();
+
+    var renderer = new Graph.Renderer.Raphael('graph_container', g, 1200, 700);
+    
+    renderer.draw();
+    $("#graph_container").hide();
+
+
+    /*{% for id in args.coauthor_ids %}
+            $("#{{ args.coauthor_names[loop.index-1]}}").attr("id","{{ id }}");
+    {% endfor %}
+    */
+
+
+
+    //Adding handlers here
+
+    /*for(var i in g.nodelist){
+       g.nodelist[i].shape.mouseover(console.log)
+       g.nodelist[i].shape.click(console.log)
+    }*/
+    
+    
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+</script>
+<div id="t2gbutton_div" style="width: 100%; height: 30px; text-align: right;">
+    <input id="mytogglebtn" type="button" value="Show graph" class="tfbutton">
+</div>
+<div id="graph_container" style="width: 100%; height: 700px;"></div>
+
+
+<table id="network_table">
     <tr>
-        <td>
-            <table>
-                <thead>
-                    <tr>
-                        <th> Author </th>
+        <td style="vertical-align: top;">
+            <table style="vertical-align: top;">
+                <thead style="vertical-align: top;">
+                    <tr style="vertical-align: top;">
+                        <th style="vertical-align: top;"> Author </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td><a href="/author/{{ args.author_id }} ">
+                    <tr style="vertical-align: top;">
+                        <td style="vertical-align: top;"><a href="/author/{{ args.author_id }} ">
                                 {{ args.author_name }}
                             </a><td>
                     </tr>
