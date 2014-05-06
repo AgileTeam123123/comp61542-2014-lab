@@ -64,6 +64,17 @@ class Database:
     def get_all_authors(self):
         return self.author_idx.keys()
 
+    def get_coauthors(self, author):
+        print author
+        coauthors = []
+        for p in self.publications:
+            if author in p.authors:
+                print "yes"
+                for a in p.authors:
+                    if a != author and a not in coauthors:
+                        coauthors.append(a)
+        return coauthors
+
     def get_coauthor_data(self, start_year, end_year, pub_type):
         coauthors = {}
         for p in self.publications:

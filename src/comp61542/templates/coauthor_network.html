@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ args.title }}{% endblock %}
+{% block header %}
+
+{% endblock %}
+
+
+{% block content %}
+<h1 class="screenHeading">{{ args.title }}</h1>
+<!-- Content of search page -->
+
+<table>
+    <tr>
+        <td>
+            <table>
+                <thead>
+                    <tr>
+                        <th> Author </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td><a href="/author/{{ args.author_id }} ">
+                                {{ args.author_name }}
+                            </a><td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td>
+            <table>
+                <thead>
+                    <tr>
+                        <th> Co-Author </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for id in args.coauthor_ids %}
+                    <tr>
+                        <td><a href="/coauthor_network?author={{ id }} ">
+                                {{ args.coauthor_names[loop.index-1]}}
+                            </a><td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+
+
+
+{% endblock %}

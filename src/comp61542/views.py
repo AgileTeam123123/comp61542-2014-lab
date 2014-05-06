@@ -137,6 +137,31 @@ def showDegreeOfSeperationResults():
 
     return render_template('degreesResults.html', args=args)
 
+@app.route("/coauthor_network")
+def showCoauthorNetwork():
+    dataset = app.config['DATASET']
+    args = {"dataset":dataset}
+    db = app.config['DATABASE']
+    args['title'] = "Coauthor Network"
+    
+    author = 0
+    
+    if "author" in request.args:
+        author = int(request.args.get("author"))
+    coauthors = db.get_coauthors(author)
+    
+    coauthor_names = []
+    
+    for a in coauthors:
+        coauthor_names.append(db.authors[int(a)].name)
+    
+    args['author_id'] = author
+    args['author_name'] = db.authors[author].name
+    args['coauthor_ids'] = coauthors
+    args['coauthor_names'] = coauthor_names
+    
+    return render_template("coauthor_network.html", args=args)
+
 @app.route("/averages")
 def showAverages():
     dataset = app.config['DATASET']
