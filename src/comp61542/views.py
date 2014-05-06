@@ -144,11 +144,27 @@ def showCoauthorNetwork():
     db = app.config['DATABASE']
     args['title'] = "Coauthor Network"
     
-    author = 0
+    author = -1
     
     if "author" in request.args:
         author = int(request.args.get("author"))
+    
+    
+    if (author == -1):
+        args['network'] = 0
+        args['authors'] = db.get_all_author_ids()
+        author_names = []
+        for id in args['authors']:
+            author_names.append(db.authors[id].name)
+        args['author_names'] = author_names
+        print "pre render"
+        return render_template("coauthor_network.html", args=args)
+    
+    print "post render"
+    
     coauthors = db.get_coauthors(author)
+        
+    args['network'] = 1
     
     coauthor_names = []
     

@@ -299,6 +299,34 @@ class TestDatabase(unittest.TestCase):
         # A <--> F
         degrees, author_path = db.get_degrees_seperation(g, 0,5)
         self.assertEqual(degrees, "x", "Author A and B not correct distance")
+        
+    def test_get_coauthors(self):
+        db = database.Database()
+        self.assertTrue(db.read(path.join(self.data_dir, "dblp_curated_sample.xml")))
+        
+        author = 667 # A. McNab
+        coauthors = db.get_coauthors(author)
+        self.assertEqual(len(coauthors), 7, "Incorrect number of coauthors")
+        
+        # Coauthors
+        # Jay Chin 224
+        # Aleksandra nenadic 293
+        # Alan 80
+        # Qi Shi 342
+        # Li Yao 666
+        # Ning Zhang 223
+        # Carole A. Gobole 31
+        
+        self.assertTrue (224 in coauthors, "Jay chin not present")
+        self.assertTrue (293 in coauthors, "JAleksandra nenadic not present")
+        self.assertTrue (80 in coauthors, "Alan not present")
+        self.assertTrue (342 in coauthors, "Qi Shi not present")
+        self.assertTrue (666 in coauthors, "Li yao not present")
+        self.assertTrue (223 in coauthors, "Ning zhang not present")
+        self.assertTrue (31 in coauthors, "Carole a. gobole not present")
+        
+        self.assertTrue (0 not in coauthors, "Stefano ceri wrongly present")
+        
 
 if __name__ == '__main__':
     unittest.main()
